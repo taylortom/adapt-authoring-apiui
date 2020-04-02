@@ -7,6 +7,27 @@
   <body>
     <h1>Auth Test</h1>
     <p>Test.</p>
-    <button type="button" name="authenticate">Authenticate</button>
+    <button type="button" class="ghauth">Log in with Github</button>
+    <div class="code output"></div>
   </body>
+  <style media="screen">
+    button {
+      display:block;
+      padding: 10px;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+    .code {
+      width: 90%;
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      padding: 20px;
+      min-height: 300px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $(() => $('.ghauth').click(() => window.location = '/api/connect/github'));
+  </script>
 </html>
