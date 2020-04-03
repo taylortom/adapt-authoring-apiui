@@ -5,12 +5,63 @@
     <title>Auth Test</title>
   </head>
   <body>
-    <h1>Auth Test</h1>
-    <p>Test.</p>
-    <button type="button" class="ghauth">Log in with Github</button>
-    <div class="code output"></div>
+    <div class="header">
+      <h1>Auth Test</h1>
+      <p>Test.</p>
+    </div>
+    <p>
+      <button type="button" name="authcheck">Check authentication</button>
+    </p>
+    <div class="login">
+      <div class="section github">
+        <h3>GitHub</h3>
+        <button type="button" name="github" class="auth">Log in with GitHub</button>
+      </div>
+      <div class="section local">
+        <h3>Local</h3>
+        <form class="" action="index.html" method="post">
+          <input type="text" name="email" value="" placeholder="Enter your email">
+          <input type="password" name="password" value="" placeholder="Enter your password">
+          <button type="button" name="local" class="auth">Log in with email/password</button>
+        </form>
+      </div>
+    </div>
+    <div class="section local">
+      <h3>Reponse Output</h3>
+      <div class="code output"></div>
+    </div>
   </body>
   <style media="screen">
+    body {
+      max-width: 700px;
+      margin: 0 auto;
+      margin-top: 70px;
+      font-family: sans-serif;
+    }
+    .header {
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      font-size: 250%;
+    }
+    .login {
+      /* display: none; */
+    }
+    .section {
+      margin-bottom: 25px;
+      padding: 5px 10px;
+      border-left: 1px solid #ccc;
+      background: #fbfbfb;
+    }
+    .section h3 {
+      margin: 5px 0 10px 0;
+    }
+    .section input {
+      margin-bottom: 5px;
+      padding: 10px;
+      width: 80%;
+      font-size: 85%;
+    }
     button {
       display:block;
       padding: 10px;
@@ -28,6 +79,34 @@
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
-    $(() => $('.ghauth').click(() => window.location = '/api/connect/github'));
+    $(() => {
+      $('button[name=authcheck]').click(checkAuth);
+      $('button.auth').click(authenticate);
+    });
+    function checkAuth(callback) {
+      $.get('/api/auth/check')
+        .done((data) => {
+          console.log(data);
+          $('.code').text(JSON.stringify(data,null,2));
+        })
+        .fail((jqXhr) => {
+          const error = jqXhr.responseJSON;
+          if(error.statusCode === 401) {
+            $('.login').css('display', 'initial');
+            return;
+          }
+          $('.code').html(error);
+        });
+    }
+    function authenticate(e) {
+      e.preventDefault();
+      switch($(e.currentTarget).attr('name')) {
+        case 'local':
+          break;
+        case 'github':
+          $('iframe').attr('src', '/api/connect/github');
+          break;
+      }
+    }
   </script>
 </html>
