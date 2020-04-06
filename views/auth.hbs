@@ -14,7 +14,8 @@
     </div>
     <div class="inner">
       <p>
-        <button type="button" name="check" class="primary">Check authentication</button>
+        <!-- <button type="button" name="check" class="primary">Check authentication</button> -->
+        <b>Authentication status:</b>
         <span class="message allow">Authenticated<span class="icon">&check;</span></span>
         <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
       </p>
@@ -132,6 +133,7 @@
   <script type="text/javascript">
     window.ADAPT = {};
     $(() => {
+      checkAuth();
       $('button[name=check]').click(checkAuth);
       $('button.auth').click(authenticate);
     });
