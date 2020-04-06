@@ -6,45 +6,67 @@
   </head>
   <body>
     <div class="header">
-      <h1>Auth Test</h1>
-      <p>Test.</p>
+      <div class="strapline">
+        <h1>Auth Test</h1>
+        <p>Testing the Adapt authoring tool authentication.</p>
+
+      </div>
     </div>
-    <p>
-      <button type="button" name="gettoken">Update token</button>
-      <span class="message allow">Authenticated<span class="icon">&check;</span></span>
-      <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
-    </p>
-    <div class="login">
-      <div class="section github">
-        <h3>GitHub</h3>
-        <button type="button" name="github" class="auth">Log in with GitHub</button>
+    <div class="inner">
+      <p>
+        <button type="button" name="check" class="primary">Check authentication</button>
+        <span class="message allow">Authenticated<span class="icon">&check;</span></span>
+        <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
+      </p>
+      <div class="login">
+        <div class="section github">
+          <h3>GitHub</h3>
+          <button type="button" name="github" class="auth">Log in with GitHub</button>
+        </div>
+        <div class="section local">
+          <h3>Local</h3>
+          <form class="" action="index.html" method="post">
+            <input type="text" name="email" value="" placeholder="Enter your email">
+            <input type="password" name="password" value="" placeholder="Enter your password">
+            <button type="button" name="local" class="auth">Log in with email/password</button>
+          </form>
+        </div>
       </div>
       <div class="section local">
-        <h3>Local</h3>
-        <form class="" action="index.html" method="post">
-          <input type="text" name="email" value="" placeholder="Enter your email">
-          <input type="password" name="password" value="" placeholder="Enter your password">
-          <button type="button" name="local" class="auth">Log in with email/password</button>
-        </form>
+        <h3>Reponse Output</h3>
+        <div class="code output"></div>
       </div>
-    </div>
-    <div class="section local">
-      <h3>Reponse Output</h3>
-      <div class="code output"></div>
     </div>
   </body>
   <style media="screen">
     body {
-      max-width: 700px;
-      margin: 0 auto;
-      margin-top: 70px;
-      font-family: sans-serif;
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      color: #263944;
+      background-image: url(https://www.adaptlearning.org/wp-content/uploads/2015/11/home-bg-03-alt.png?id=1567);
+      background-attachment: fixed;
+      background-size: cover;
     }
     .header {
-      margin-bottom: 30px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      text-align: center;
     }
     .header h1 {
-      font-size: 250%;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 300%;
+      font-weight: lighter;
+    }
+    .strapline {
+      margin-top: 20px;
+      padding: 20px;
+      background: linear-gradient(90deg, #55cee9 0%, #68df96 100%);
+      color: white;
+    }
+    .inner {
+      max-width: 700px;
+      margin: 0 auto;
     }
     .message {
       display: none;
@@ -52,7 +74,7 @@
       padding: 5px 10px 5px 8px;
       font-style: italic;
       color: white;
-      border-radius: 5px;
+      border-radius: 3px;
     }
     .message .icon {
       margin-left: 10px;
@@ -60,16 +82,16 @@
       font-style: normal;
     }
     .allow {
-      background-color: #70af26;
+      background-color: #4caf50;
     }
     .deny {
-      background-color: #a2320f;
+      background-color: #ed5065;
     }
     .section {
       margin-bottom: 25px;
       padding: 5px 10px;
-      border-left: 1px solid #ccc;
-      background: #fbfbfb;
+      border-left: 1px solid #68df96;
+      background: rgba(124,181,214,0.03);
     }
     .section h3 {
       margin: 5px 0 10px 0;
@@ -81,13 +103,25 @@
       font-size: 85%;
     }
     button {
-      padding: 10px;
+      padding: 15px 20px;
       cursor: pointer;
       margin-bottom: 5px;
+      background: transparent;
+      font-size: 80%;
+      font-weight: bold;
+      border-radius: 2px solid;
+      transition: all .2s ease-in-out;
+      color: #36cde8;
+      border-color: #36cde8;
+      outline: none;
+    }
+    button:hover {
+      background-color: #36cde8;
+      color: white;
     }
     .code {
       width: 90%;
-      background-color: black;
+      background-color: #263944;
       color: white;
       font-family: monospace;
       padding: 20px;
@@ -98,10 +132,10 @@
   <script type="text/javascript">
     window.ADAPT = {};
     $(() => {
-      $('button[name=gettoken]').click(getToken);
+      $('button[name=check]').click(checkAuth);
       $('button.auth').click(authenticate);
     });
-    function getToken(callback) {
+    function checkAuth(callback) {
       $.get('/api/auth/check')
         .done((data) => {
           window.ADAPT.tokenData = data;
@@ -133,4 +167,5 @@
       $(`.message.${name}`).css('display', 'inline');
     }
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap" rel="stylesheet">
 </html>
