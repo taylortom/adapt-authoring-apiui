@@ -132,7 +132,6 @@
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
-    window.ADAPT = {};
     $(() => {
       checkAuth();
       $('button[name=check]').click(checkAuth);
@@ -141,9 +140,8 @@
     function checkAuth(callback) {
       $.get('/api/auth/check')
         .done((data) => {
-          window.ADAPT.tokenData = data;
           showMessage('allow');
-          $('.message .id').text(window.ADAPT.tokenData.sub);
+          $('.message .id').text(data.sub);
           $('.code').text(JSON.stringify(data,null,2));
         })
         .fail((jqXhr) => {
