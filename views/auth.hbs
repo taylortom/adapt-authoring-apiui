@@ -16,7 +16,7 @@
       <p>
         <!-- <button type="button" name="check" class="primary">Check authentication</button> -->
         <b>Authentication status:</b>
-        <span class="message allow">Authenticated<span class="icon">&check;</span></span>
+        <span class="message allow">Authenticated as <span class="id"></span><span class="icon">&check;</span></span>
         <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
       </p>
       <div class="login">
@@ -75,13 +75,16 @@
       color: white;
       border-radius: 3px;
     }
+    .message .id {
+      font-weight: bold;
+    }
     .message .icon {
       margin-left: 10px;
       font-weight: bold;
       font-style: normal;
     }
     .allow {
-      background-color: #4caf50;
+      background-color: #68df96;
     }
     .deny {
       background-color: #ed5065;
@@ -140,6 +143,7 @@
         .done((data) => {
           window.ADAPT.tokenData = data;
           showMessage('allow');
+          $('.message .id').text(window.ADAPT.tokenData.sub);
           $('.code').text(JSON.stringify(data,null,2));
         })
         .fail((jqXhr) => {
