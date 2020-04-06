@@ -10,7 +10,9 @@
       <p>Test.</p>
     </div>
     <p>
-      <button type="button" name="authcheck">Check authentication</button>
+      <button type="button" name="gettoken">Update token</button>
+      <span class="message allow">Authenticated<span class="icon">&check;</span></span>
+      <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
     </p>
     <div class="login">
       <div class="section github">
@@ -44,8 +46,24 @@
     .header h1 {
       font-size: 250%;
     }
-    .login {
-      /* display: none; */
+    .message {
+      display: none;
+      margin-left: 15px;
+      padding: 5px 10px 5px 8px;
+      font-style: italic;
+      color: white;
+      border-radius: 5px;
+    }
+    .message .icon {
+      margin-left: 10px;
+      font-weight: bold;
+      font-style: normal;
+    }
+    .allow {
+      background-color: #70af26;
+    }
+    .deny {
+      background-color: #a2320f;
     }
     .section {
       margin-bottom: 25px;
@@ -63,7 +81,6 @@
       font-size: 85%;
     }
     button {
-      display:block;
       padding: 10px;
       cursor: pointer;
       margin-bottom: 5px;
@@ -79,19 +96,22 @@
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
+    window.ADAPT = {};
     $(() => {
-      $('button[name=authcheck]').click(checkAuth);
+      $('button[name=gettoken]').click(getToken);
       $('button.auth').click(authenticate);
     });
-    function checkAuth(callback) {
+    function getToken(callback) {
       $.get('/api/auth/check')
         .done((data) => {
-          console.log(data);
+          window.ADAPT.tokenData = data;
+          showMessage('allow');
           $('.code').text(JSON.stringify(data,null,2));
         })
         .fail((jqXhr) => {
           const error = jqXhr.responseJSON;
           if(error.statusCode === 401) {
+            showMessage('deny');
             $('.login').css('display', 'initial');
             return;
           }
@@ -104,9 +124,13 @@
         case 'local':
           break;
         case 'github':
-          $('iframe').attr('src', '/api/connect/github');
+          window.location = '/api/connect/github';
           break;
       }
+    }
+    function showMessage(name) {
+      $(`.message`).css('display', 'none');
+      $(`.message.${name}`).css('display', 'inline');
     }
   </script>
 </html>
