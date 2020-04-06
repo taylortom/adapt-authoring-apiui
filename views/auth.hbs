@@ -156,6 +156,9 @@
       e.preventDefault();
       switch($(e.currentTarget).attr('name')) {
         case 'local':
+          $.ajax('/api/auth/local', { method: 'post', data: $('form').serialize() })
+            .done(() => window.location = window.location)
+            .fail(() => window.location = window.location);
           break;
         case 'github':
           window.location = '/api/auth/github';
