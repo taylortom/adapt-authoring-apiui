@@ -160,14 +160,16 @@
       e.preventDefault();
       switch($(e.currentTarget).attr('name')) {
         case 'local':
-          $.ajax('/api/auth/local', { method: 'post', data: $('form').serialize() })
-            .done(() => window.location = window.location)
-            .fail(() => window.location = window.location);
+          const data = $('form').serialize();
+          $.ajax('/api/auth/local', { method: 'post', data }).done(refresh).fail(refresh);
           break;
         case 'github':
           window.location = '/api/auth/github';
           break;
       }
+    }
+    function refresh() {
+      window.location = window.location;
     }
     function showMessage(name) {
       $(`.message`).css('display', 'none');
