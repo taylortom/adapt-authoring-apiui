@@ -18,6 +18,7 @@
         <b>Authentication status:</b>
         <span class="message allow">Authenticated as <span class="id"></span><span class="icon">&check;</span></span>
         <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
+        <button type="button" name="purge">Clear session data</button>
       </p>
       <div class="login">
         <div class="section github">
@@ -138,6 +139,7 @@
     $(() => {
       checkAuth();
       $('button[name=check]').click(checkAuth);
+      $('button[name=purge]').click(clearSession);
       $('button.auth').click(authenticate);
     });
     function checkAuth(callback) {
@@ -168,6 +170,9 @@
           window.location = '/api/auth/github';
           break;
       }
+    }
+    function clearSession(e) {
+      $.ajax('/api/session/clear', { method: 'post' }).done(refresh).fail(refresh);
     }
     function refresh() {
       window.location = window.location;
