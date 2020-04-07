@@ -9,7 +9,6 @@
       <div class="strapline">
         <h1>Auth Test</h1>
         <p>Testing the Adapt authoring tool authentication.</p>
-
       </div>
     </div>
     <div class="snack">
@@ -215,11 +214,9 @@
       doAjax('/api/session/clear', { method: 'post' });
     }
     function sendRequest() {
-      const $o = $('.output');
-      const $ta = $('textarea', $o);
-
-      $ta.html('');
-      $o.hide();
+      $('.output textarea').height(0).html('');
+      $('.output').hide();
+      hideSnack();
 
       const url = $('.request form input[name=url]').val();
       const method = $('.request form input[name=method]:checked').val();
@@ -231,12 +228,9 @@
         const data = dataVal && JSON.parse(dataVal);
 
         doAjax(url, { method, data }, (data) => {
-          $ta.html(JSON.stringify(data, null, 2));
-          $o.show();
-          $ta.height($ta[0].scrollHeight);
+          updateOutput(JSON.stringify(data, null, 2));
         }, (jqXhr) => {
-          $ta.html(`${jqXhr.status}: ${jqXhr.statusText}\n${JSON.stringify(jqXhr.responseJSON, null, 2) || ''}`);
-          $o.show();
+          updateOutput(`${jqXhr.status}: ${jqXhr.statusText}\n${JSON.stringify(jqXhr.responseJSON, null, 2) || ''}`);
         });
       } catch(e) {
         showSnack('Failed to parse request data', false);
@@ -249,6 +243,11 @@
       $.ajax(url, options)
         .done(doneCb)
         .fail(failCb);
+    }
+    function updateOutput(html) {
+      $('.output textarea').html(html);
+      $('.output').show();
+      $('.output textarea').height($('.output textarea')[0].scrollHeight);
     }
     function showSnack(text, success=true) {
       $(`.snack .text`).html(text);
