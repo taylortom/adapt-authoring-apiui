@@ -33,12 +33,37 @@
           </form>
         </div>
       </div>
-      <!--
-      <div class="section local">
-        <h3>Reponse Output</h3>
-        <div class="code output"></div>
+      <div class="section request">
+        <h3>API Test</h3>
+        <form action="index.html" method="post">
+          <p>
+            <b>HTTP method:</b><br/>
+            <input type="radio" id="post" name="method" value="post" checked>
+            <label for="post">POST</label>
+            <input type="radio" id="get" name="method" value="get">
+            <label for="get">GET</label>
+            <input type="radio" id="put" name="method" value="put">
+            <label for="put">PUT</label>
+            <input type="radio" id="delete" name="method" value="delete">
+            <label for="delete">DELETE</label>
+          </p>
+          <p>
+            <b>API endpoint:</b><br/>
+            <input type="text" name="url" value="" class="code" placeholder="API route (can be relative)">
+          </p>
+          <p>
+            <b>Data:</b><br/>
+            <textarea name="data" class="code" placeholder="Data to be sent with request (must be valid JSON)"></textarea>
+          </p>
+          <p>
+            <button type="button" name="request">Send request</button>
+          </p>
+          <p class="output">
+            <b>Reponse data:</b><br/>
+            <textarea class="code"></textarea>
+          </p>
+        </form>
       </div>
-    -->
     </div>
   </body>
   <style media="screen">
@@ -54,13 +79,16 @@
       text-align: center;
     }
     .header h1 {
-      margin-top: 10px;
+      margin-top: 60px;
       margin-bottom: 10px;
       font-size: 300%;
       font-weight: lighter;
     }
     .snack {
       display: none;
+      position: fixed;
+      top: 0;
+      width: 100%;
       background-color: #263944;
       color: white;
       padding: 7px;
@@ -108,7 +136,9 @@
     .section h3 {
       margin: 0 0 10px 0;
     }
-    .section input {
+    .section input[type="text"],
+    .section input[type="password"],
+    .section textarea {
       display: block;
       margin-bottom: 5px;
       padding: 15px 10px;
@@ -140,12 +170,16 @@
       color: white;
     }
     .code {
-      width: 90%;
-      background-color: #263944;
-      color: white;
+      font-size: 100% !important;
       font-family: monospace;
-      padding: 20px;
-      min-height: 300px;
+      background-color: #263944 !important;
+      color: white;
+    }
+    textarea.code {
+      min-height: 75px;
+    }
+    .output {
+      display: none;
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -154,35 +188,23 @@
       checkAuth();
       $('button[name=check]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
+      $('button[name=close]').click(hideSnack);
+      $('button[name=request]').click(sendRequest);
+      $('button[name=refresh]').click(refresh);
       $('button.auth').click(authenticate);
-      $('.snack button[name=close]').click(hideSnack);
-      $('.snack button[name=refresh]').click(refresh);
     });
     function checkAuth(callback) {
-      $.get('/api/auth/check')
-        .done((data) => {
-          showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
-          $('.message .id').text(data.sub);
-          $('.code').text(JSON.stringify(data,null,2));
-          $('button[name=purge]').css('display', 'initial');
-        })
-        .fail((jqXhr) => {
-          const error = jqXhr.responseJSON;
-          if(error.statusCode === 401) {
-            showSnack(error.message, false);
-            $('.login').css('display', 'initial');
-            $('button[name=purge]').css('display', 'none');
-            return;
-          }
-          $('.code').html(error);
-        });
+      doAjax('/api/auth/check', { method: 'get' }, (data) => {
+        showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
+        $('.message .id').text(data.sub);
+        $('button[name=purge]').css('display', 'initial');
+      });
     }
     function authenticate(e) {
       e.preventDefault();
       switch($(e.currentTarget).attr('name')) {
         case 'local':
-          const data = $('form').serialize();
-          $.ajax('/api/auth/local', { method: 'post', data }).done(refresh).fail(refresh);
+          doAjax('/api/auth/local', { method: 'post', data: $('.local form').serialize() });
           break;
         case 'github':
           window.location = '/api/auth/github';
@@ -190,14 +212,45 @@
       }
     }
     function clearSession(e) {
-      $.ajax('/api/session/clear', { method: 'post' })
-        .done(refresh)
-        .fail(jqXhr => showSnack(jqXhr.responseJSON.message, false));
+      doAjax('/api/session/clear', { method: 'post' });
+    }
+    function sendRequest() {
+      const $o = $('.output');
+      const $ta = $('textarea', $o);
+
+      $ta.html('');
+      $o.hide();
+
+      const url = $('.request form input[name=url]').val();
+      const method = $('.request form input[name=method]:checked').val();
+
+      if(!url) return showSnack('Must specify request URL', false);
+
+      try {
+        const dataVal = $('.request form textarea[name=data]').val();
+        const data = dataVal && JSON.parse(dataVal);
+
+        doAjax(url, { method, data }, (data) => {
+          $ta.html(JSON.stringify(data, null, 2));
+          $o.show();
+          $ta.height($ta[0].scrollHeight);
+        }, (jqXhr) => {
+          $ta.html(`${jqXhr.status}: ${jqXhr.statusText}\n${JSON.stringify(jqXhr.responseJSON, null, 2) || ''}`);
+          $o.show();
+        });
+      } catch(e) {
+        showSnack('Failed to parse request data', false);
+      }
     }
     function refresh() {
       window.location = window.location;
     }
-    function showSnack(text, success) {
+    function doAjax(url, options, doneCb = refresh, failCb = jqXhr => showSnack(jqXhr.responseJSON.message, false)) {
+      $.ajax(url, options)
+        .done(doneCb)
+        .fail(failCb);
+    }
+    function showSnack(text, success=true) {
       $(`.snack .text`).html(text);
       $(`.snack`).removeClass(success ? 'deny' : 'allow').addClass(success ? 'allow' : 'deny');
       $('.snack button[name=purge]').toggle(success);
