@@ -12,14 +12,13 @@
 
       </div>
     </div>
+    <div class="snack">
+      <span class="text"></span>
+      <button type="button" name="purge">Clear session data</button>
+      <button type="button" name="refresh">Refresh</button>
+      <button type="button" name="close">Close</button>
+    </div>
     <div class="inner">
-      <p>
-        <!-- <button type="button" name="check" class="primary">Check authentication</button> -->
-        <b>Authentication status:</b>
-        <span class="message allow">Authenticated as <span class="id"></span><span class="icon">&check;</span></span>
-        <span class="message deny">Not authenticated<span class="icon">&cross;</span></span>
-        <button type="button" name="purge">Clear session data</button>
-      </p>
       <div class="login">
         <div class="section github">
           <h3>GitHub</h3>
@@ -52,7 +51,6 @@
       background-size: cover;
     }
     .header {
-      margin-bottom: 50px;
       text-align: center;
     }
     .header h1 {
@@ -61,43 +59,50 @@
       font-size: 300%;
       font-weight: lighter;
     }
+    .snack {
+      display: none;
+      background-color: #263944;
+      color: white;
+      padding: 7px;
+      text-align: center;
+      border-top: 0px solid #ffffff85;
+      border-bottom: 5px solid #ffffff85;
+    }
+    .snack button {
+      display: inline-block;
+      border-color: white;
+      color: white;
+      margin-top: 0;
+      margin-left: 10px;
+      padding: 5px;
+    }
+    .snack button:hover {
+      background-color: white;
+      color: #263944
+    }
+    .snack.allow { border-color: #68df96; }
+    .snack.deny { border-color: #ed5065; }
+
+    .snack button[name="purge"] {
+      display: none;
+    }
+
     .strapline {
       padding: 20px;
       background: linear-gradient(90deg, #55cee9 0%, #68df96 100%);
       color: white;
     }
-    .inner {
+    body > .inner {
       max-width: 700px;
       margin: 0 auto;
-    }
-    .message {
-      display: none;
-      margin: 0 10px;
-      padding: 5px 10px 5px 8px;
-      font-style: italic;
-      color: white;
-      border-radius: 3px;
-    }
-    .message .id {
-      font-weight: bold;
-    }
-    .message .icon {
-      margin-left: 10px;
-      font-weight: bold;
-      font-style: normal;
-    }
-    .allow {
-      background-color: #68df96;
-    }
-    .deny {
-      background-color: #ed5065;
+      margin-top: 50px;
     }
     .section {
       margin-bottom: 25px;
       padding: 20px;
       background: white;
       border: 1px solid #cde5ea;
-      border-left: 10px solid #68df96;
+      border-left: 10px solid #55cee9;
       border-radius: 3px;
     }
     .section h3 {
@@ -150,19 +155,23 @@
       $('button[name=check]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
       $('button.auth').click(authenticate);
+      $('.snack button[name=close]').click(hideSnack);
+      $('.snack button[name=refresh]').click(refresh);
     });
     function checkAuth(callback) {
       $.get('/api/auth/check')
         .done((data) => {
-          showMessage('allow');
+          showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
           $('.message .id').text(data.sub);
           $('.code').text(JSON.stringify(data,null,2));
+          $('button[name=purge]').css('display', 'initial');
         })
         .fail((jqXhr) => {
           const error = jqXhr.responseJSON;
           if(error.statusCode === 401) {
-            showMessage('deny');
+            showSnack(error.message, false);
             $('.login').css('display', 'initial');
+            $('button[name=purge]').css('display', 'none');
             return;
           }
           $('.code').html(error);
@@ -181,14 +190,22 @@
       }
     }
     function clearSession(e) {
-      $.ajax('/api/session/clear', { method: 'post' }).done(refresh).fail(refresh);
+      $.ajax('/api/session/clear', { method: 'post' })
+        .done(refresh)
+        .fail(jqXhr => showSnack(jqXhr.responseJSON.message, false));
     }
     function refresh() {
       window.location = window.location;
     }
-    function showMessage(name) {
-      $(`.message`).css('display', 'none');
-      $(`.message.${name}`).css('display', 'inline');
+    function showSnack(text, success) {
+      $(`.snack .text`).html(text);
+      $(`.snack`).removeClass(success ? 'deny' : 'allow').addClass(success ? 'allow' : 'deny');
+      $('.snack button[name=purge]').toggle(success);
+      $('.snack button[name=refresh]').toggle(!success);
+      $(`.snack`).fadeIn();
+    }
+    function hideSnack() {
+      $('.snack').fadeOut();
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap" rel="stylesheet">
