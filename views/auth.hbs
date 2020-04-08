@@ -36,6 +36,10 @@
         <h3>API Test</h3>
         <form action="index.html" method="post">
           <p>
+            <b>API endpoints:</b><br/>
+            <select name="api"></select>
+          </p>
+          <p>
             <b>HTTP method:</b><br/>
             <input type="radio" id="post" name="method" value="post" checked>
             <label for="post" class="code">POST</label>
@@ -201,18 +205,35 @@
   <script type="text/javascript">
     $(() => {
       checkAuth();
+      fetchApi();
       $('button[name=check]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
       $('button[name=request]').click(sendRequest);
       $('button[name=refresh]').click(refresh);
       $('button.auth').click(authenticate);
+
+      $('select[name="api"]').change(updateApiOptions);
     });
     function checkAuth(callback) {
       doAjax('/api/auth/check', { method: 'get' }, (data) => {
         showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
         $('.message .id').text(data.sub);
         $('button[name=purge]').css('display', 'initial');
+      });
+    }
+    function fetchApi() {
+      doAjax('/api', { method: 'get' }, data => {
+        const o = window.location.origin;
+        const $s = $('select[name="api"]');
+        Object.values(data).forEach(endpoints => {
+          endpoints.forEach(e => {
+            e.accepted_methods.forEach(m => {
+              const relUrl = e.url.replace(o, '');
+              $s.append(`<option data-http-method="${m}" data-url="${e.url}" data-rel-url="${relUrl}">${m.toUpperCase()} ${relUrl}</option>`);
+            });
+          });
+        });
       });
     }
     function authenticate(e) {
@@ -259,6 +280,12 @@
       $.ajax(url, options)
         .done(doneCb)
         .fail(failCb);
+    }
+    function updateApiOptions(e) {
+      const $o = $("option:selected", this);
+      $(`input[name="method"]`).prop('checked', false)
+      $(`input[name="method"][value="${$o.attr('data-http-method')}"]`).prop('checked', true);
+      $('input[name="url"]').val($o.attr('data-rel-url'));
     }
     function updateOutput(html) {
       $('.output textarea').html(html);
