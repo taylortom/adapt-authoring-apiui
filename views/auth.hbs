@@ -291,6 +291,7 @@
       $('#output textarea').html(html);
       $('#output').show();
       $('#output textarea').height($('#output textarea')[0].scrollHeight);
+      $([document.documentElement, document.body]).animate({ scrollTop: $("#output").offset().top }, 1000);
     }
     function showSnack(text, success=true) {
       $(`.snack .text`).html(text);
