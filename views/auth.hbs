@@ -61,7 +61,7 @@
           <p>
             <button type="button" name="request">Send request</button>
           </p>
-          <p class="output">
+          <p id="output">
             <b>Reponse data:</b><br/>
             <textarea class="code"></textarea>
           </p>
@@ -197,7 +197,7 @@
     textarea.code {
       min-height: 75px;
     }
-    .output {
+    #output {
       display: none;
     }
   </style>
@@ -251,8 +251,8 @@
       doAjax('/api/session/clear', { method: 'post' });
     }
     function sendRequest() {
-      $('.output textarea').height(0).html('');
-      $('.output').hide();
+      $('#output textarea').height(0).html('');
+      $('#output').hide();
       hideSnack();
 
       const url = $('.request form input[name=url]').val();
@@ -288,9 +288,9 @@
       $('input[name="url"]').val($o.attr('data-rel-url'));
     }
     function updateOutput(html) {
-      $('.output textarea').html(html);
-      $('.output').show();
-      $('.output textarea').height($('.output textarea')[0].scrollHeight);
+      $('#output textarea').html(html);
+      $('#output').show();
+      $('#output textarea').height($('#output textarea')[0].scrollHeight);
     }
     function showSnack(text, success=true) {
       $(`.snack .text`).html(text);
