@@ -30,7 +30,7 @@
         <div class="section github">
           <h3>GitHub</h3>
           <button type="button" name="github" class="auth">Log in with GitHub</button>
-      </div>
+        </div>
       </div>
       <div class="section request">
         <h3>API Test</h3>
@@ -66,6 +66,10 @@
             <textarea class="code"></textarea>
           </p>
         </form>
+      </div>
+      <div class="section api">
+        <h3>API Map</h3>
+        <div class="endpoints"></div>
       </div>
     </div>
   </body>
@@ -200,6 +204,25 @@
     #output {
       display: none;
     }
+    .section.api .endpoints {
+      font-size: inherit;
+    }
+    .section.api .endpoints > div {
+      font-family: monospace;
+      margin-left: 10px;
+    }
+    .section.api .endpoints h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .section.api .endpoints h4:first-child {
+      margin-top: 0;
+    }
+    .section.api .endpoints .methods {
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-left: 15px;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
@@ -225,12 +248,17 @@
     function fetchApi() {
       doAjax('/api', { method: 'get' }, data => {
         const o = window.location.origin;
-        const $s = $('select[name="api"]');
-        Object.values(data).forEach(endpoints => {
+        const $select = $('select[name="api"]');
+        const $api = $('.section.api .endpoints');
+        Object.entries(data).forEach(([key,endpoints]) => {
+          const name = key.replace('_endpoints', '').replace('_', '/');
+          $api.append('<h4>' + name);
           endpoints.forEach(e => {
+            const url = e.url.replace(o, '');
+            $api.append(`<div><span class="url">${url}</span><span class="methods">${e.accepted_methods}</methods></div>`);
             e.accepted_methods.forEach(m => {
               const relUrl = e.url.replace(o, '');
-              $s.append(`<option data-http-method="${m}" data-url="${e.url}" data-rel-url="${relUrl}">${m.toUpperCase()} ${relUrl}</option>`);
+              $select.append(`<option data-http-method="${m}" data-url="${e.url}" data-rel-url="${relUrl}">${m.toUpperCase()} ${relUrl}</option>`);
             });
           });
         });
