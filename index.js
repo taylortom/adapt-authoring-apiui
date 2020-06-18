@@ -1,1 +1,1 @@
-module.exports = require('./lib/authUiModule');
+module.exports = require('./lib/apiUiModule');
