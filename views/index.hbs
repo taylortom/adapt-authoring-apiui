@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>API Test</title>
+  </head>
+  <body>
+    <div class="header">
+      <div class="strapline">
+        <h1>API Test Hub</h1>
+        <p>Test the Adapt authoring tool API to your heart's content.</p>
+      </div>
+    </div>
+    <div class="snack">
+      <span class="text"></span>
+      <button type="button" name="purge">Clear session data</button>
+      <button type="button" name="refresh">Refresh</button>
+      <button type="button" name="close">Close</button>
+    </div>
+    <div class="inner">
+      <div class="login">
+        <div class="section github">
+          <h3>GitHub</h3>
+          <button type="button" name="github" class="auth">Log in with GitHub</button>
+        </div>
+        <div class="section local">
+          <h3>Local</h3>
+          <form action="index.html" method="post">
+            <input type="text" name="email" value="" placeholder="Enter your email">
+            <input type="password" name="password" value="" placeholder="Enter your password">
+            <button type="button" name="local" class="auth">Log in with email/password</button>
+          </form>
+        </div>
+      </div>
+      <div class="section request">
+        <h3>API Test</h3>
+        <form action="index.html" method="post">
+          <p>
+            <b>API endpoints:</b><br/>
+            <select name="api"></select>
+          </p>
+          <p>
+            <b>HTTP method:</b><br/>
+            <input type="radio" id="post" name="method" value="post" checked>
+            <label for="post" class="code">POST</label>
+            <input type="radio" id="get" name="method" value="get">
+            <label for="get" class="code">GET</label>
+            <input type="radio" id="put" name="method" value="put">
+            <label for="put" class="code">PUT</label>
+            <input type="radio" id="delete" name="method" value="delete">
+            <label for="delete" class="code">DELETE</label>
+          </p>
+          <p>
+            <b>API endpoint:</b><br/>
+            <input type="text" name="url" value="" class="code" placeholder="API route (can be relative)">
+          </p>
+          <p>
+            <b>Data:</b><br/>
+            <textarea name="data" class="code" placeholder="Data to be sent with request (must be valid JSON)"></textarea>
+          </p>
+          <p>
+            <button type="button" name="request">Send request</button>
+          </p>
+          <p id="output">
+            <b>Reponse data:</b><br/>
+            <textarea class="code"></textarea>
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+  <style media="screen">
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      color: #263944;
+      background-image: url(https://www.adaptlearning.org/wp-content/uploads/2015/11/home-bg-03-alt.png?id=1567);
+      background-attachment: fixed;
+      background-size: cover;
+    }
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      margin-top: 60px;
+      margin-bottom: 10px;
+      font-size: 300%;
+      font-weight: lighter;
+    }
+    .snack {
+      display: none;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #263944;
+      color: white;
+      padding: 7px;
+      text-align: center;
+      border-top: 0px solid #ffffff85;
+      border-bottom: 5px solid #ffffff85;
+    }
+    .snack button {
+      display: inline-block;
+      border-color: white;
+      color: white;
+      margin-top: 0;
+      margin-left: 10px;
+      padding: 5px;
+    }
+    .snack button:hover {
+      background-color: white;
+      color: #263944
+    }
+    .snack.allow { border-color: #68df96; }
+    .snack.deny { border-color: #ed5065; }
+
+    .snack button[name="purge"] {
+      display: none;
+    }
+
+    .strapline {
+      padding: 20px;
+      background: linear-gradient(90deg, #55cee9 0%, #68df96 100%);
+      color: white;
+    }
+    body > .inner {
+      max-width: 700px;
+      margin: 0 auto;
+      margin-top: 50px;
+    }
+    .section {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #cde5ea;
+      border-left: 10px solid #55cee9;
+      border-radius: 3px;
+    }
+    .section h3 {
+      margin: 0 0 10px 0;
+    }
+    .section input[type="text"],
+    .section input[type="password"],
+    .section textarea {
+      display: block;
+      margin-bottom: 5px;
+      padding: 15px 10px;
+      font-size: 85%;
+      width: 95%;
+      background: transparent;
+      border: 1px solid #cde5ea;
+      outline: none;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    input[type="radio"]+label {
+      display: inline-block;
+      background-color: transparent !important;
+      border: 1px solid #68df96;
+      color: #68df96;
+      padding: 1px 5px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    input[type="radio"]+label:hover,
+    input[type="radio"]:checked+label {
+      background-color: #68df96 !important;
+      color: white;
+    }
+    .section input::placeholder {
+      font-style: italic;
+    }
+    button {
+      padding: 15px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      background: transparent;
+      font-size: 90%;
+      font-weight: bold;
+      border: 1px solid;
+      border-radius: 3px;
+      transition: all .2s ease-in-out;
+      color: #36cde8;
+      border-color: #36cde8;
+      outline: none;
+    }
+    button:hover {
+      background-color: #36cde8;
+      color: white;
+    }
+    .code {
+      font-family: 'Source Code Pro', monospace;
+      background-color: #263944 !important;
+      color: white;
+    }
+    textarea.code {
+      min-height: 75px;
+    }
+    #output {
+      display: none;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $(() => {
+      checkAuth();
+      fetchApi();
+      $('button[name=check]').click(checkAuth);
+      $('button[name=purge]').click(clearSession);
+      $('button[name=close]').click(hideSnack);
+      $('button[name=request]').click(sendRequest);
+      $('button[name=refresh]').click(refresh);
+      $('button.auth').click(authenticate);
+
+      $('select[name="api"]').change(updateApiOptions);
+    });
+    function checkAuth(callback) {
+      doAjax('/api/auth/check', { method: 'get' }, data => {
+        showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
+        $('.message .id').text(data.sub);
+        $('button[name=purge]').css('display', 'initial');
+      });
+    }
+    function fetchApi() {
+      doAjax('/api', { method: 'get' }, data => {
+        const o = window.location.origin;
+        const $s = $('select[name="api"]');
+        Object.values(data).forEach(endpoints => {
+          endpoints.forEach(e => {
+            e.accepted_methods.forEach(m => {
+              const relUrl = e.url.replace(o, '');
+              $s.append(`<option data-http-method="${m}" data-url="${e.url}" data-rel-url="${relUrl}">${m.toUpperCase()} ${relUrl}</option>`);
+            });
+          });
+        });
+      });
+    }
+    function authenticate(e) {
+      e.preventDefault();
+      switch($(e.currentTarget).attr('name')) {
+        case 'local':
+          doAjax('/api/auth/local', { method: 'post', data: $('.local form').serialize() });
+          break;
+        case 'github':
+          window.location = '/api/auth/github';
+          break;
+      }
+    }
+    function clearSession(e) {
+      doAjax('/api/session/clear', { method: 'post' });
+    }
+    function sendRequest() {
+      $('#output textarea').height(0).html('');
+      $('#output').hide();
+      hideSnack();
+
+      const url = $('.request form input[name=url]').val();
+      const method = $('.request form input[name=method]:checked').val();
+
+      if(!url) return showSnack('Must specify request URL', false);
+
+      try {
+        const dataVal = $('.request form textarea[name=data]').val();
+        const data = dataVal && JSON.parse(dataVal);
+
+        doAjax(url, { method, data }, (data, textStatus, jqXhr) => {
+          updateOutput(`Status ${jqXhr.status}: ${jqXhr.statusText}\n\n${JSON.stringify(data, null, 2)}`);
+        }, (jqXhr) => {
+          updateOutput(`${jqXhr.status}: ${jqXhr.statusText}\n${JSON.stringify(jqXhr.responseJSON, null, 2) || ''}`);
+        });
+      } catch(e) {
+        showSnack('Failed to parse request data', false);
+      }
+    }
+    function refresh() {
+      window.location = window.location;
+    }
+    function doAjax(url, options, doneCb = refresh, failCb = jqXhr => showSnack(jqXhr.responseJSON.message, false)) {
+      $.ajax(url, options)
+        .done(doneCb)
+        .fail(failCb);
+    }
+    function updateApiOptions(e) {
+      const $o = $("option:selected", this);
+      $(`input[name="method"]`).prop('checked', false)
+      $(`input[name="method"][value="${$o.attr('data-http-method')}"]`).prop('checked', true);
+      $('input[name="url"]').val($o.attr('data-rel-url'));
+    }
+    function updateOutput(html) {
+      $('#output textarea').html(html);
+      $('#output').show();
+      $('#output textarea').height($('#output textarea')[0].scrollHeight);
+      $([document.documentElement, document.body]).animate({ scrollTop: $("#output").offset().top }, 1000);
+    }
+    function showSnack(text, success=true) {
+      $(`.snack .text`).html(text);
+      $(`.snack`).removeClass(success ? 'deny' : 'allow').addClass(success ? 'allow' : 'deny');
+      $('.snack button[name=purge]').toggle(success);
+      $('.snack button[name=refresh]').toggle(!success);
+      $(`.snack`).fadeIn();
+    }
+    function hideSnack() {
+      $('.snack').fadeOut();
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+</html>
