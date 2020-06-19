@@ -65,11 +65,11 @@
             <b>Reponse data:</b><br/>
             <textarea class="code"></textarea>
           </p>
+          <details class="apiMap">
+            <summary>API Map</summary>
+            <div class="endpoints"></div>
+          </details>
         </form>
-      </div>
-      <div class="section api">
-        <h3>API Map</h3>
-        <div class="endpoints"></div>
       </div>
     </div>
   </body>
@@ -204,21 +204,26 @@
     #output {
       display: none;
     }
-    .section.api .endpoints {
-      font-size: inherit;
+    .apiMap summary {
+      font-weight: bold;
     }
-    .section.api .endpoints > div {
+    .apiMap .endpoints {
+      font-size: inherit;
+      padding: 10px 15px;
+    }
+    .apiMap .endpoints > div {
       font-family: monospace;
       margin-left: 10px;
     }
-    .section.api .endpoints h4 {
+    .apiMap .endpoints h4 {
+      font-size: 90%;
       margin-top: 20px;
       margin-bottom: 10px;
     }
-    .section.api .endpoints h4:first-child {
+    .apiMap .endpoints h4:first-child {
       margin-top: 0;
     }
-    .section.api .endpoints .methods {
+    .apiMap .endpoints .methods {
       font-weight: bold;
       text-transform: uppercase;
       margin-left: 15px;
@@ -249,7 +254,7 @@
       doAjax('/api', { method: 'get' }, data => {
         const o = window.location.origin;
         const $select = $('select[name="api"]');
-        const $api = $('.section.api .endpoints');
+        const $api = $('.apiMap .endpoints');
         Object.entries(data).forEach(([key,endpoints]) => {
           const name = key.replace('_endpoints', '').replace('_', '/');
           $api.append('<h4>' + name);
