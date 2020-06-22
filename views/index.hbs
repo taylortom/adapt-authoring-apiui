@@ -295,9 +295,9 @@
 
       try {
         const dataVal = $('.request form textarea[name=data]').val();
-        const data = dataVal && JSON.parse(dataVal);
+        const data = dataVal && JSON.parse(dataVal) && dataVal;
 
-        doAjax(url, { method, data }, (data, textStatus, jqXhr) => {
+        doAjax(url, { method, data, contentType: 'application/json' }, (data, textStatus, jqXhr) => {
           updateOutput(`Status ${jqXhr.status}: ${jqXhr.statusText}\n\n${JSON.stringify(data, null, 2)}`);
         }, (jqXhr) => {
           updateOutput(`${jqXhr.status}: ${jqXhr.statusText}\n${JSON.stringify(jqXhr.responseJSON, null, 2) || ''}`);
