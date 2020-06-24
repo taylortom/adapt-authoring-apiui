@@ -258,6 +258,9 @@
     .revision .inner {
       padding: 10px;
     }
+    .revision .value {
+      color: #55cee9;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
@@ -339,6 +342,7 @@
       }
     }
     function getRevisions() {
+      $('#revisions').empty();
       const id = $('.revisions form input[name=id]').val();
       if(!id) return showSnack('Must specify course ID', false);
       doAjax(`/api/vcs/course/${id}`, { method: 'get' }, ({ course, revisions }) => {
@@ -349,16 +353,45 @@
         }
       });
     }
-    function revisionDiv({ timestamp, diff }) {
+    function revisionDiv({ diff, target, timestamp }) {
       return `<div class="revision">` +
           `<details>` +
             `<summary>${timestamp}</summary>` +
             `<div class="inner">` +
-              `<pre class="diff">${JSON.stringify(diff,null,2)}</pre>` +
+              `<b>${target.type}</b> ${target._id}<br/><br/>` +
+              `<b>Changes:</b>` +
+              formatDiff(diff) +
               `<button>Revert</button>` +
             `</div>` +
           `</details>` +
       `</div>`;
+    }
+    function formatDiff(data) {
+      let html = '';
+      if(Array.isArray(data)) { // primitive value
+        if(data.length === 1) html += `added <span class="value">${data[0]}</span>`;
+        if(data.length === 2) html += `<span class="value">${data[0]}</span> changed to <span class="value">${data[1]}</span>`;
+        if(data.length === 3) html += `removed`;
+      } else if(data._t === 'a') { // array
+        html += '<ul>';
+        Object.entries(data).forEach(([i,val]) => {
+          if(i === '_t') {
+            return;
+          }
+          if(i[0] === '_') {
+            return html += `<li>removed item at ${i.slice(1)}</li>`;
+          }
+          html += `<li>added <span class="value">${val}</span> at ${i}</li>`;
+        });
+        html += `</ul>`;
+      } else { // nested object
+        html += '<ul>';
+        Object.entries(data).forEach(([prop2,data2]) => {
+          html += `<li><b>${prop2}</b> ${formatDiff(data2)}</li>`;
+        });
+        html += `</ul>`;
+      }
+      return html;
     }
     function refresh() {
       window.location = window.location;
