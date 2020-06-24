@@ -73,6 +73,20 @@
           </details>
         </form>
       </div>
+      <div class="section revisions">
+        <h3>Revisions</h3>
+        <form action="index.html" method="post">
+          <p>
+            <b>Course:</b><br/>
+            <input type="text" name="id" value="" placeholder="Course ID">
+          </p>
+          <p>
+            <button type="button" name="revisions">Send request</button>
+          </p>
+        </form>
+        <b>Revisions:</b><br/>
+        <div id="revisions"></div>
+      </div>
     </div>
   </body>
   <style media="screen">
@@ -230,6 +244,20 @@
       text-transform: uppercase;
       margin-left: 15px;
     }
+    .revision {
+      margin-bottom: 5px;
+      border-radius: 3px;
+      border: 2px solid #68df96;
+    }
+    .revision summary {
+      padding: 3px 10px;
+      background: #68df96;
+      color: white;
+      outline: none;
+    }
+    .revision .inner {
+      padding: 10px;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
@@ -240,6 +268,7 @@
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
       $('button[name=request]').click(sendRequest);
+      $('button[name=revisions]').click(getRevisions);
       $('button[name=refresh]').click(refresh);
       $('button.auth').click(authenticate);
 
@@ -308,6 +337,24 @@
         showSnack('Failed to parse request data', false);
         console.log(e);
       }
+    }
+    function getRevisions() {
+      const id = $('.revisions form input[name=id]').val();
+      if(!id) return showSnack('Must specify course ID', false);
+      doAjax(`/api/vcs/course/${id}`, { method: 'get' }, ({ course, revisions }) => {
+        revisions.forEach(r => $('#revisions').append(revisionDiv(r)));
+      });
+    }
+    function revisionDiv({ timestamp, diff }) {
+      return `<div class="revision">` +
+          `<details>` +
+            `<summary>${timestamp}</summary>` +
+            `<div class="inner">` +
+              `<pre class="diff">${JSON.stringify(diff,null,2)}</pre>` +
+              `<button>Revert</button>` +
+            `</div>` +
+          `</details>` +
+      `</div>`;
     }
     function refresh() {
       window.location = window.location;
