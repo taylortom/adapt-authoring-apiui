@@ -342,7 +342,11 @@
       const id = $('.revisions form input[name=id]').val();
       if(!id) return showSnack('Must specify course ID', false);
       doAjax(`/api/vcs/course/${id}`, { method: 'get' }, ({ course, revisions }) => {
-        revisions.forEach(r => $('#revisions').append(revisionDiv(r)));
+        if(!revisions)  {
+          $('#revisions').html('<p style="text-align:center;">No revisions for course<p>');
+        } else {
+          revisions.forEach(r => $('#revisions').append(revisionDiv(r)));
+        }
       });
     }
     function revisionDiv({ timestamp, diff }) {
