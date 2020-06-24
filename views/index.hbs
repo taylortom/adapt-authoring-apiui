@@ -350,11 +350,12 @@
         if(!revisions)  {
           $('#revisions').html('<p style="text-align:center;">No revisions for course<p>');
         } else {
-          revisions.forEach(r => $('#revisions').append(revisionDiv(r)));
+          revisions.forEach((r,i) => $('#revisions').append(revisionDiv(r, course._id, i)));
+          $('button[name=revert]').click(revertRevision);
         }
       });
     }
-    function revisionDiv({ diff, target, timestamp }) {
+    function revisionDiv({ diff, target, timestamp }, courseId, index) {
       return `<div class="revision">` +
           `<details>` +
             `<summary>${formatDate(timestamp)}</summary>` +
@@ -362,7 +363,7 @@
               `<b>${target.type}</b> ${target._id}<br/><br/>` +
               `<b>Changes:</b>` +
               formatDiff(diff) +
-              `<button>Revert</button>` +
+              `<button name="revert" data-index="${index}" data-course="${courseId}">Revert</button>` +
             `</div>` +
           `</details>` +
       `</div>`;
@@ -403,6 +404,13 @@
         html += `</ul>`;
       }
       return html;
+    }
+    function revertRevision(e) {
+      const revision = $(e.currentTarget).attr('data-index');
+      const _id = $(e.currentTarget).attr('data-course');
+      doAjax(`/api/vcs/course/revert`, { method: 'post', data: { _id, revision } }, () => {
+        showSnack(`Successfully reverted course`);
+      });
     }
     function refresh() {
       window.location = window.location;
