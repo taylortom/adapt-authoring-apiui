@@ -356,7 +356,7 @@
     function revisionDiv({ diff, target, timestamp }) {
       return `<div class="revision">` +
           `<details>` +
-            `<summary>${timestamp}</summary>` +
+            `<summary>${formatDate(timestamp)}</summary>` +
             `<div class="inner">` +
               `<b>${target.type}</b> ${target._id}<br/><br/>` +
               `<b>Changes:</b>` +
@@ -365,6 +365,16 @@
             `</div>` +
           `</details>` +
       `</div>`;
+    }
+    function formatDate(dateString) {
+      const d = new Date(dateString);
+      return d.toGMTString();
+      /*
+      const date = d.getDate().toString().padStart(2,'0');
+      const month = d.getMonth().toString().padStart(2,'0');
+      const year = d.getFullYear().toString().slice(2);
+      return `${date}/${month}/${year} ${}`;
+      */
     }
     function formatDiff(data) {
       let html = '';
