@@ -346,7 +346,7 @@
       $('#revisions').empty();
       const id = $('.revisions form input[name=id]').val();
       if(!id) return showSnack('Must specify course ID', false);
-      doAjax(`/api/vcs/course/${id}`, { method: 'get' }, ({ course, revisions }) => {
+      doAjax(`/api/vcs/course/revisions/${id}`, { method: 'get' }, ({ course, revisions }) => {
         if(!revisions)  {
           $('#revisions').html('<p style="text-align:center;">No revisions for course<p>');
         } else {
