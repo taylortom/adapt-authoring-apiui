@@ -13,18 +13,23 @@
     </div>
     <div class="snack">
       <span class="text"></span>
-      <button type="button" name="purge">Clear session data</button>
       <button type="button" name="refresh">Refresh</button>
       <button type="button" name="close">Close</button>
     </div>
     <div class="inner">
       <div class="login">
+        <div class="authcheck">
+          <span class="icon"></span>
+          <span class="text"></span>
+          <button type="button" name="purge">Clear session data</button>
+        </div>
         <div class="section local">
           <h3>Local</h3>
           <form action="index.html" method="post">
             <input type="text" name="email" value="" placeholder="Enter your email">
             <input type="password" name="password" value="" placeholder="Enter your password">
             <button type="button" name="local" class="auth">Log in with email/password</button>
+            <button type="button" name="authcheck" class="auth">Check auth</button>
           </form>
         </div>
         <div class="section github">
@@ -268,13 +273,28 @@
     .revision button:last-child {
       margin-right: 0;
     }
+    .authcheck {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .authcheck.allow {
+      color: #68df96;
+    }
+    .authcheck.deny {
+      color: #ed5065;
+    }
+    .authcheck button {
+      display: none;
+      padding: 5px 8px;
+      margin-left: 10px;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(() => {
       checkAuth();
       fetchApi();
-      $('button[name=check]').click(checkAuth);
+      $('button[name=authcheck]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
       $('button[name=request]').click(sendRequest);
@@ -285,10 +305,14 @@
       $('select[name="api"]').change(updateApiOptions);
     });
     function checkAuth(callback) {
+      $('button[name=purge]').hide();
       doAjax('/api/auth/check', { method: 'get' }, data => {
-        showSnack(`Authenticated successfully as <b>${data.sub}</b>`, true);
-        $('.message .id').text(data.sub);
-        $('button[name=purge]').css('display', 'initial');
+        $('.authcheck').removeClass('deny').addClass(`allow`);
+        $('.authcheck .text').html(`Authenticated successfully as <b>${data.sub}</b>`);
+        $('button[name=purge]').show();
+      }, error => {
+        $('.authcheck').removeClass('allow').addClass(`deny`);
+        $('.authcheck .text').html(`Not authenticated with the API.`);
       });
     }
     function fetchApi() {
