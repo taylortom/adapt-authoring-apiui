@@ -262,6 +262,12 @@
     .revision .value {
       color: #55cee9;
     }
+    .revision button {
+      margin-right: 10px;
+    }
+    .revision button:last-child {
+      margin-right: 0;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
@@ -363,7 +369,8 @@
               `<b>${target.type}</b> ${target._id}<br/><br/>` +
               `<b>Changes:</b>` +
               formatDiff(diff) +
-              `<button name="revert" data-index="${index}" data-course="${courseId}">Revert</button>` +
+              `<button name="revert" data-index="${index}" data-course="${courseId}">Undo this change</button>` +
+              `<button name="revert" data-index="${index}" data-course="${courseId}" data-recursive="true">Revert to this revision</button>` +
             `</div>` +
           `</details>` +
       `</div>`;
@@ -408,7 +415,8 @@
     function revertRevision(e) {
       const revision = $(e.currentTarget).attr('data-index');
       const _id = $(e.currentTarget).attr('data-course');
-      doAjax(`/api/vcs/course/revert`, { method: 'post', data: { _id, revision } }, () => {
+      const recursive = $(e.currentTarget).attr('data-recursive') === 'true';
+      doAjax(`/api/vcs/course/revert`, { method: 'post', data: { _id, revision, recursive } }, () => {
         showSnack(`Successfully reverted course`);
       });
     }
