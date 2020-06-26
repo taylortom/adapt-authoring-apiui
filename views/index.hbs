@@ -24,7 +24,8 @@
           <button type="button" name="purge">Clear session data</button>
         </div>
         <div class="section local">
-          <h3>Local</h3>
+          <h3>Local authentication</h3>
+          <p>Test local (username/password) authentication.</p>
           <form id="auth" action="index.html" method="post">
             <input type="text" name="email" value="" placeholder="Enter your email">
             <input type="password" name="password" value="" placeholder="Enter your password">
@@ -33,14 +34,17 @@
           </form>
         </div>
         <div class="section github">
-          <h3>GitHub</h3>
+          <h3>GitHub authentication</h3>
+          <p>Test authentication via GitHub.</p>
           <button type="button" name="github" class="auth">Log in with GitHub</button>
         </div>
       </div>
       <div class="section request">
         <h3>API Test</h3>
+        <p>Test the API.</p>
+        <p><em>Note you will need a user account and the relevant privileges to access certain endpoints.</em></p>
         <p>
-          <b>API endpoints:</b><br/>
+          <b>API endpoints lookup:</b><br/>
           <select name="api"></select>
         </p>
         <p>
@@ -74,12 +78,14 @@
           <textarea class="code"></textarea>
         </p>
         <details class="apiMap">
+          <p>See below for a list of all endpoints exposed by the API.</p>
           <summary>API Map</summary>
           <div class="endpoints"></div>
         </details>
       </div>
       <div class="section revisions">
-        <h3>Revisions</h3>
+        <h3>Course revisions</h3>
+        <p>Revert changes to existing courses.</p>
         <form action="index.html" method="post">
           <p>
             <b>Course:</b><br/>
