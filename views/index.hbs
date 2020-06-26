@@ -320,6 +320,7 @@
         const o = window.location.origin;
         const $select = $('select[name="api"]');
         const $api = $('.apiMap .endpoints');
+        $select.append(`<option selected disabled>Select an endpoint</option>`);
         Object.entries(data).forEach(([key,endpoints]) => {
           const name = key.replace('_endpoints', '').replace('_', '/');
           $api.append('<h4>' + name);
