@@ -95,8 +95,10 @@
             <button type="button" name="revisions">Send request</button>
           </p>
         </form>
-        <b>Revisions:</b><br/>
-        <div id="revisions"></div>
+        <div id="revisionsOutput">
+          <b>Revisions:</b><br/>
+          <div id="revisions"></div>
+        </div>
       </div>
     </div>
   </body>
@@ -255,6 +257,9 @@
       text-transform: uppercase;
       margin-left: 15px;
     }
+    #revisionsOutput {
+      display: none;
+    }
     .revision {
       margin-bottom: 5px;
       border-radius: 3px;
@@ -389,6 +394,7 @@
         } else {
           revisions.forEach((r,i) => $('#revisions').append(revisionDiv(r, course._id, i)));
           $('button[name=revert]').click(revertRevision);
+          $('#revisionsOutput').show();
         }
       });
     }
