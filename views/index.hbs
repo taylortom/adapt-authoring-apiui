@@ -96,8 +96,7 @@
         <p>Revert changes to existing courses.</p>
         <form action="index.html" method="post">
           <p>
-            <b>Course:</b><br/>
-            <input type="text" name="id" value="" placeholder="Course ID">
+            <select name="courses"></select>
           </p>
           <p>
             <button type="button" name="revisions">Send request</button>
@@ -336,6 +335,8 @@
 
       checkAuth();
       fetchApi();
+      renderCourseSelect();
+
       $('button[name=authcheck]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
@@ -415,9 +416,18 @@
         console.log(e);
       }
     }
+    function renderCourseSelect() {
+      doAjax(`/api/content?_type=course`, { method: 'get' }, courses => {
+        const $select = $('select[name="courses"]');
+        $select.append(`<option selected disabled>Select a course</option>`);
+        courses.forEach(({ _id, displayTitle }) => {
+          $select.append(`<option data-id="${_id}">${displayTitle} (${_id})</option>`);
+        });
+      }, () => $('#revisions').hide());
+    }
     function getRevisions() {
-      $('#revisions').empty();
-      const id = $('.revisions form input[name=id]').val();
+      $('#revisionsOutput').empty();
+      const id = $('.revisions select[name=courses]').children("option:selected").attr('data-id');
       if(!id) return showSnack('Must specify course ID', false);
       doAjax(`/api/vcs/course/revisions/${id}`, { method: 'get' }, ({ course, revisions }) => {
         if(!revisions)  {
