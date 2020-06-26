@@ -25,7 +25,7 @@
         </div>
         <div class="section local">
           <h3>Local</h3>
-          <form action="index.html" method="post">
+          <form id="auth" action="index.html" method="post">
             <input type="text" name="email" value="" placeholder="Enter your email">
             <input type="password" name="password" value="" placeholder="Enter your password">
             <button type="button" name="local" class="auth">Log in with email/password</button>
@@ -39,44 +39,44 @@
       </div>
       <div class="section request">
         <h3>API Test</h3>
-        <form action="index.html" method="post">
-          <p>
-            <b>API endpoints:</b><br/>
-            <select name="api"></select>
-          </p>
-          <p>
-            <b>HTTP method:</b><br/>
-            <input type="radio" id="post" name="method" value="post" checked>
-            <label for="post" class="code">POST</label>
-            <input type="radio" id="get" name="method" value="get">
-            <label for="get" class="code">GET</label>
-            <input type="radio" id="put" name="method" value="put">
-            <label for="put" class="code">PUT</label>
-            <input type="radio" id="patch" name="method" value="patch">
-            <label for="patch" class="code">PATCH</label>
-            <input type="radio" id="delete" name="method" value="delete">
-            <label for="delete" class="code">DELETE</label>
-          </p>
-          <p>
-            <b>API endpoint:</b><br/>
-            <input type="text" name="url" value="" class="code" placeholder="API route (can be relative)">
-          </p>
+        <p>
+          <b>API endpoints:</b><br/>
+          <select name="api"></select>
+        </p>
+        <p>
+          <b>HTTP method:</b><br/>
+          <input type="radio" id="post" name="method" value="post" checked>
+          <label for="post" class="code">POST</label>
+          <input type="radio" id="get" name="method" value="get">
+          <label for="get" class="code">GET</label>
+          <input type="radio" id="put" name="method" value="put">
+          <label for="put" class="code">PUT</label>
+          <input type="radio" id="patch" name="method" value="patch">
+          <label for="patch" class="code">PATCH</label>
+          <input type="radio" id="delete" name="method" value="delete">
+          <label for="delete" class="code">DELETE</label>
+        </p>
+        <p>
+          <b>API endpoint:</b><br/>
+          <input type="text" name="url" value="" class="code" placeholder="API route (can be relative)">
+        </p>
+        <form id="api" action="index.html" method="post">
           <p>
             <b>Data:</b><br/>
             <textarea name="data" class="code" placeholder="Data to be sent with request (must be valid JSON)"></textarea>
           </p>
-          <p>
-            <button type="button" name="request">Send request</button>
-          </p>
-          <p id="output">
-            <b>Reponse data:</b><br/>
-            <textarea class="code"></textarea>
-          </p>
-          <details class="apiMap">
-            <summary>API Map</summary>
-            <div class="endpoints"></div>
-          </details>
         </form>
+        <p>
+          <button type="button" name="request">Send request</button>
+        </p>
+        <p id="output">
+          <b>Reponse data:</b><br/>
+          <textarea class="code"></textarea>
+        </p>
+        <details class="apiMap">
+          <summary>API Map</summary>
+          <div class="endpoints"></div>
+        </details>
       </div>
       <div class="section revisions">
         <h3>Revisions</h3>
@@ -353,8 +353,8 @@
       $('#output').hide();
       hideSnack();
 
-      const url = $('.request form input[name=url]').val();
-      const method = $('.request form input[name=method]:checked').val();
+      const url = $('.request input[name=url]').val();
+      const method = $('.request input[name=method]:checked').val();
 
       if(!url) return showSnack('Must specify request URL', false);
 
