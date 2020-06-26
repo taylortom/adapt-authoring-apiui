@@ -16,14 +16,22 @@
       <button type="button" name="refresh">Refresh</button>
       <button type="button" name="close">Close</button>
     </div>
+    <div id="navigation">
+      <a class="" href="#">Introduction</a>
+      <a class="" href="#localauth">Local authentication</a>
+      <a class="" href="#githubauth">GitHub authentication</a>
+      <a class="" href="#api">API Test</a>
+      <a class="" href="#revisions">Course revisions</a>
+    </div>
+    <div class="authcheck">
+      <span class="icon"></span>
+      <span class="text"></span>
+      <button type="button" name="purge">Clear session data</button>
+    </div>
     <div class="inner">
       <div class="login">
-        <div class="authcheck">
-          <span class="icon"></span>
-          <span class="text"></span>
-          <button type="button" name="purge">Clear session data</button>
-        </div>
-        <div class="section local">
+        <p>Test the Adapt authoring tool API to your heart's content.</p>
+        <div id="localauth" class="section local">
           <h3>Local authentication</h3>
           <p>Test local (username/password) authentication.</p>
           <form id="auth" action="index.html" method="post">
@@ -33,13 +41,13 @@
             <button type="button" name="authcheck" class="auth">Check auth</button>
           </form>
         </div>
-        <div class="section github">
+        <div id="githubauth" class="section github">
           <h3>GitHub authentication</h3>
           <p>Test authentication via GitHub.</p>
           <button type="button" name="github" class="auth">Log in with GitHub</button>
         </div>
       </div>
-      <div class="section request">
+      <div id="api" class="section request">
         <h3>API Test</h3>
         <p>Test the API.</p>
         <p><em>Note you will need a user account and the relevant privileges to access certain endpoints.</em></p>
@@ -83,7 +91,7 @@
           <div class="endpoints"></div>
         </details>
       </div>
-      <div class="section revisions">
+      <div id="revisions" class="section revisions">
         <h3>Course revisions</h3>
         <p>Revert changes to existing courses.</p>
         <form action="index.html" method="post">
@@ -150,7 +158,28 @@
     .snack button[name="purge"] {
       display: none;
     }
-
+    #navigation {
+      position: fixed;
+      top: 30%;
+      border-left: 5px solid #68df95;
+      padding-left: 10px;
+      margin: 20px;
+    }
+    #navigation a {
+      display: block;
+      font-weight: bold;
+      text-decoration: none;
+      margin-bottom: 5px;
+    }
+    #navigation a:visited {
+      color: initial;
+    }
+    #navigation a:hover {
+      text-decoration: underline;
+    }
+    #navigation a:last-child {
+      margin-bottom: 0;
+    }
     .strapline {
       padding: 20px;
       background: linear-gradient(90deg, #55cee9 0%, #68df96 100%);
@@ -303,6 +332,8 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(() => {
+      $('#navigation').css('top', $('.header').height());
+
       checkAuth();
       fetchApi();
       $('button[name=authcheck]').click(checkAuth);
