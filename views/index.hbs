@@ -447,7 +447,7 @@
             `<div class="inner">` +
               `<b>${target.type}</b> ${target._id}<br/><br/>` +
               `<b>Changes:</b>` +
-              formatDiff(diff) +
+              `<ul>${formatDiff(diff)}</ul>` +
               `<button name="revert" data-index="${index}" data-course="${courseId}">Undo this change</button>` +
               `<button name="revert" data-index="${index}" data-course="${courseId}" data-recursive="true">Revert to this revision</button>` +
             `</div>` +
@@ -464,32 +464,34 @@
       return `${date}/${month}/${year} ${}`;
       */
     }
-    function formatDiff(data) {
-      let html = '';
+    function formatDiff(data, key) {
       if(Array.isArray(data)) { // primitive value
-        if(data.length === 1) html += `added <span class="value">${data[0]}</span>`;
-        if(data.length === 2) html += `<span class="value">${data[0]}</span> changed to <span class="value">${data[1]}</span>`;
-        if(data.length === 3) html += `removed`;
+        let label = '';
+        if(key) label = `<b>${key}</b>: `;
+        switch(data.length) {
+          case 1:
+            label += typeof data[0] === 'object' ? `added everything!` : `added <span class="value">${val}</span>`;
+            break;
+          case 2:
+            label += `<span class="value">${data[0]}</span> changed to <span class="value">${data[1]}</span>`;
+            break;
+          case 3:
+            label += `removed`;
+            break;
+        }
+        return `<li>${label}</li>`;
       } else if(data._t === 'a') { // array
-        html += '<ul>';
+        const children = '';
         Object.entries(data).forEach(([i,val]) => {
-          if(i === '_t') {
-            return;
-          }
-          if(i[0] === '_') {
-            return html += `<li>removed item at ${i.slice(1)}</li>`;
-          }
-          html += `<li>added <span class="value">${val}</span> at ${i}</li>`;
+          if(i === '_t') return;
+          const label = i[0] === '_' ?  `removed item at ${i.slice(1)}` : `added <span class="value">${val}</span> at ${i}`;
+          children += `<li>${label}</li>`;
         });
-        html += `</ul>`;
+        return `<ul>${children}</ul>`;
       } else { // nested object
-        html += '<ul>';
-        Object.entries(data).forEach(([prop2,data2]) => {
-          html += `<li><b>${prop2}</b> ${formatDiff(data2)}</li>`;
-        });
-        html += `</ul>`;
+        const entries = Object.entries(data);
+        return entries.reduce((m,[k,v]) => `${m}${formatDiff(v,k)}`, '');
       }
-      return html;
     }
     function revertRevision(e) {
       const revision = $(e.currentTarget).attr('data-index');
