@@ -315,11 +315,13 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    .authcheck.allow {
+    .authcheck.allow, .authcheck.allow button {
       color: #68df96;
+      border-color: #68df96;
     }
-    .authcheck.deny {
+    .authcheck.deny, .authcheck.deny button {
       color: #ed5065;
+      border-color: #ed5065;
     }
     .authcheck button {
       display: none;
@@ -351,8 +353,9 @@
       $('button[name=purge]').hide();
       $('button[name=recheckauth]').hide();
       doAjax('/api/auth/check', { method: 'get' }, data => {
+        const typeText = data.type === 'local' ? 'username/password' : data.type;
         $('.authcheck').removeClass('deny').addClass(`allow`);
-        $('.authcheck .text').html(`Authenticated successfully as <b>${data.sub}</b>`);
+        $('.authcheck .text').html(`Authenticated successfully as <b>${data.sub}</b> using ${typeText}`);
         $('button[name=purge]').show();
       }, error => {
         $('.authcheck').removeClass('allow').addClass(`deny`);
