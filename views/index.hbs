@@ -27,6 +27,7 @@
       <span class="icon"></span>
       <span class="text"></span>
       <button type="button" name="purge">Clear session data</button>
+      <button type="button" name="recheckauth">Retry</button>
     </div>
     <div class="inner">
       <div class="login">
@@ -336,6 +337,7 @@
       renderCourseSelect();
 
       $('button[name=authcheck]').click(checkAuth);
+      $('button[name=recheckauth]').click(checkAuth);
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
       $('button[name=request]').click(sendRequest);
@@ -347,6 +349,7 @@
     });
     function checkAuth(callback) {
       $('button[name=purge]').hide();
+      $('button[name=recheckauth]').hide();
       doAjax('/api/auth/check', { method: 'get' }, data => {
         $('.authcheck').removeClass('deny').addClass(`allow`);
         $('.authcheck .text').html(`Authenticated successfully as <b>${data.sub}</b>`);
@@ -354,6 +357,7 @@
       }, error => {
         $('.authcheck').removeClass('allow').addClass(`deny`);
         $('.authcheck .text').html(`Not authenticated with the API.`);
+        $('button[name=recheckauth]').show();
       });
     }
     function fetchApi() {
