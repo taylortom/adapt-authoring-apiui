@@ -485,7 +485,7 @@
         }
         return `<li>${label}</li>`;
       } else if(data._t === 'a') { // array
-        const children = '';
+        let children = '';
         Object.entries(data).forEach(([i,val]) => {
           if(i === '_t') return;
           const label = i[0] === '_' ?  `removed item at ${i.slice(1)}` : `added <span class="value">${val}</span> at ${i}`;
