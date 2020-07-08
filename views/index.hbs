@@ -474,7 +474,7 @@
         if(key) label = `<b>${key}</b>: `;
         switch(data.length) {
           case 1:
-            label += typeof data[0] === 'object' ? `added everything!` : `added <span class="value">${val}</span>`;
+            label += typeof data[0] === 'object' ? `added everything!` : `added <span class="value">${data[0]}</span>`;
             break;
           case 2:
             label += `<span class="value">${data[0]}</span> changed to <span class="value">${data[1]}</span>`;
