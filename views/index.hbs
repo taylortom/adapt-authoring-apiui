@@ -92,16 +92,20 @@
           <div class="endpoints"></div>
         </details>
       </div>
+      <div id="coursemap" class="section coursemap">
+        <h3>Course map</h3>
+        <p>View a visual 'map' of all content in a course.</p>
+        <form action="index.html" method="post">
+          <p><select name="courses"></select></p>
+          <p><button type="button" name="coursemap">Go</button></p>
+        </form>
+      </div>
       <div id="revisions" class="section revisions">
         <h3>Course revisions</h3>
         <p>Revert changes to existing courses.</p>
         <form action="index.html" method="post">
-          <p>
-            <select name="courses"></select>
-          </p>
-          <p>
-            <button type="button" name="revisions">Send request</button>
-          </p>
+          <p><select name="courses"></select></p>
+          <p><button type="button" name="revisions">Send request</button></p>
         </form>
         <div id="revisionsOutput">
           <b>Revisions:</b><br/>
@@ -343,6 +347,7 @@
       $('button[name=purge]').click(clearSession);
       $('button[name=close]').click(hideSnack);
       $('button[name=request]').click(sendRequest);
+      $('button[name=coursemap]').click(viewCourseMap);
       $('button[name=revisions]').click(getRevisions);
       $('button[name=refresh]').click(refresh);
       $('button.auth').click(authenticate);
@@ -429,6 +434,10 @@
           $select.append(`<option data-id="${_id}">${displayTitle} (${_id})</option>`);
         });
       }, () => $('#revisions').hide());
+    }
+    function viewCourseMap() {
+      const id = $('.coursemap select[name=courses]').children("option:selected").attr('data-id');
+      window.open(`${window.location.origin}/course?_id=${id}`);
     }
     function getRevisions() {
       $('#revisionsOutput').empty();
