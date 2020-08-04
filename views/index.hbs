@@ -451,9 +451,9 @@
       if(!id) return showSnack('Must specify course ID', false);
       doAjax(`/api/vcs/course/revisions/${id}`, { method: 'get' }, ({ course, revisions }) => {
         if(!revisions)  {
-          $('#revisions').html('<p style="text-align:center;">No revisions for course<p>');
+          $('#revisionsOutput').html('<p style="text-align:center;">No revisions for course<p>');
         } else {
-          revisions.forEach((r,i) => $('#revisions').append(revisionDiv(r, course._id, i)));
+          revisions.forEach((r,i) => $('#revisionsOutput').append(revisionDiv(r, course._id, i)));
           $('button[name=revert]').click(revertRevision);
           $('#revisionsOutput').show();
         }
@@ -511,6 +511,7 @@
       const recursive = $(e.currentTarget).attr('data-recursive') === 'true';
       doAjax(`/api/vcs/course/revert`, { method: 'post', data: { _id, revision, recursive } }, () => {
         showSnack(`Successfully reverted course`);
+        getRevisions();
       });
     }
     function refresh() {
