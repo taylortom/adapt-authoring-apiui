@@ -474,14 +474,7 @@
       `</div>`;
     }
     function formatDate(dateString) {
-      const d = new Date(dateString);
-      return d.toGMTString();
-      /*
-      const date = d.getDate().toString().padStart(2,'0');
-      const month = d.getMonth().toString().padStart(2,'0');
-      const year = d.getFullYear().toString().slice(2);
-      return `${date}/${month}/${year} ${}`;
-      */
+      return new Date(dateString).toLocaleString('en-gb');
     }
     function formatDiff(data, key) {
       if(Array.isArray(data)) { // primitive value
