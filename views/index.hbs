@@ -303,6 +303,12 @@
       outline: none;
       cursor: pointer;
     }
+    .revision summary .action {
+      font-weight: bold;
+    }
+    .revision summary .timestamp {
+      float: right;
+    }
     .revision .inner {
       padding: 10px;
     }
@@ -453,12 +459,12 @@
         }
       });
     }
-    function revisionDiv({ diff, target, timestamp }, courseId, index) {
+    function revisionDiv({ action, diff, target, timestamp }, courseId, index) {
       return `<div class="revision">` +
           `<details>` +
-            `<summary>${formatDate(timestamp)}</summary>` +
+            `<summary><span class="action">${action}</span> <span class="targettype">${target.type}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
             `<div class="inner">` +
-              `<b>${target.type}</b> ${target._id}<br/><br/>` +
+              `<b>ID:</b> ${target._id}<br/><br/>` +
               `<b>Changes:</b>` +
               `<ul>${formatDiff(diff)}</ul>` +
               `<button name="revert" data-index="${index}" data-course="${courseId}">Undo this change</button>` +
