@@ -269,7 +269,7 @@
     }
     .apiMap .endpoints {
       font-size: inherit;
-      padding: 10px 15px;
+      /*padding: 10px 15px;*/
     }
     .apiMap .endpoints > div {
       font-family: monospace;
@@ -287,6 +287,19 @@
       font-weight: bold;
       text-transform: uppercase;
       margin-left: 15px;
+    }
+    table {
+      font-size: 90%;
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+    table th {
+      text-align: left;
+      background: #67df95;
+    }
+    table th, table td {
+      padding: 5px 10px;
+      border: 1px solid black;
     }
     #revisionsOutput {
       display: none;
@@ -377,21 +390,24 @@
     function fetchApi() {
       doAjax('/api', { method: 'get' }, data => {
         const o = window.location.origin;
+        const endpoints = Object.entries(data).reduce((m,[k,u]) => {
+          u.forEach(e => m.push({ name: k.replace('_endpoints', '').replace('_', '/'), url: e.url, methods: e.accepted_methods }));
+          return m;
+        }, []).sort((a,b) => a.url.localeCompare(b.url));
+
         const $select = $('select[name="api"]');
-        const $api = $('.apiMap .endpoints');
+        const $tab = $('<table><tr><th>URL</th><th>Accepted methods</th></tr></table>');
+
         $select.append(`<option selected disabled>Select an endpoint</option>`);
-        Object.entries(data).forEach(([key,endpoints]) => {
-          const name = key.replace('_endpoints', '').replace('_', '/');
-          $api.append('<h4>' + name);
-          endpoints.forEach(e => {
-            const url = e.url.replace(o, '');
-            $api.append(`<div><span class="url">${url}</span><span class="methods">${e.accepted_methods}</methods></div>`);
-            e.accepted_methods.forEach(m => {
-              const relUrl = e.url.replace(o, '');
-              $select.append(`<option data-http-method="${m}" data-url="${e.url}" data-rel-url="${relUrl}">${m.toUpperCase()} ${relUrl}</option>`);
-            });
+
+        endpoints.forEach(({ name, url, methods }) => {
+          const relUrl = url.replace(o, '');
+          $tab.append(`<tr><td>${url.replace(name, `<b>${name}</b>`)}</td><td>${methods.join(', ').toUpperCase()}</td></tr>`);
+          methods.forEach(m => {
+            $select.append(`<option data-http-method="${m}" data-url="${url}" data-rel-url="${relUrl}">${relUrl} ${m.toUpperCase()}</option>`);
           });
         });
+        $('.apiMap .endpoints').append($tab);
       });
     }
     function authenticate(e) {
