@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+.contentItem {
+  margin: 15px;
+  background: #00abc126;
+  border: 1px solid black;
+  overflow: auto;
+}
+.contentItem.component { background: rgba(255,255,255,0.4); }
+.contentItem.component.left, .contentItem.component.right {
+  display: inline-block;
+  width: 45%;
+  float: right;
+}
+.contentItem.component.left { float: left; }
+
+.contentItem .inner {
+  padding: 10px;
+}
+.contentItem .header {
+  background: black;
+  color: white;
+  border-bottom: 1px solid black;
+  padding: 5px;
+}
+.contentItem.course .header { background: orange; }
+.contentItem.menu .header { background: magenta; }
+.contentItem.page .header { background: purple; }
+.contentItem.article .header { background: red; }
+.contentItem.block .header { background: blue; }
+.contentItem.component .header { background: green; }
+
+.contentItem ._component {
+  margin-left: 10px;
+  font-style: italic;
+}
+.contentItem ._id {
+  float: right;
+  opacity: 0.7;
+}

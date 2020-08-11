@@ -1,0 +1,236 @@
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #263944;
+  background-image: url(https://www.adaptlearning.org/wp-content/uploads/2015/11/home-bg-03-alt.png?id=1567);
+  background-attachment: fixed;
+  background-size: cover;
+}
+.header {
+  text-align: center;
+}
+.header h1 {
+  margin-top: 60px;
+  margin-bottom: 10px;
+  font-size: 300%;
+  font-weight: lighter;
+}
+.snack {
+  display: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #263944;
+  color: white;
+  padding: 7px;
+  text-align: center;
+  border-top: 0px solid #ffffff85;
+  border-bottom: 5px solid #ffffff85;
+}
+.snack button {
+  display: inline-block;
+  border-color: white;
+  color: white;
+  margin-top: 0;
+  margin-left: 10px;
+  padding: 5px;
+}
+.snack button:hover {
+  background-color: white;
+  color: #263944
+}
+.snack.allow { border-color: #68df96; }
+.snack.deny { border-color: #ed5065; }
+
+#navigation {
+  position: fixed;
+  top: 30%;
+  border-left: 5px solid #68df95;
+  padding-left: 10px;
+  margin: 20px;
+}
+#navigation a {
+  display: block;
+  margin-bottom: 5px;
+  color: initial;
+  font-weight: bold;
+  text-decoration: none;
+}
+#navigation a:visited {
+  color: initial;
+}
+#navigation a:hover {
+  text-decoration: underline;
+}
+#navigation a:last-child {
+  margin-bottom: 0;
+}
+.strapline {
+  padding: 20px;
+  background: linear-gradient(90deg, #55cee9 0%, #68df96 100%);
+  color: white;
+}
+body > .inner {
+  max-width: 700px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+.section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #cde5ea;
+  border-left: 10px solid #55cee9;
+  border-radius: 3px;
+}
+.section h3 {
+  margin: 0 0 10px 0;
+}
+.section input[type="text"],
+.section input[type="password"],
+.section textarea {
+  display: block;
+  margin-bottom: 5px;
+  padding: 15px 10px;
+  font-size: 85%;
+  width: 95%;
+  background: transparent;
+  border: 1px solid #cde5ea;
+  outline: none;
+}
+input[type="radio"] {
+  display: none;
+}
+input[type="radio"]+label {
+  display: inline-block;
+  background-color: transparent !important;
+  border: 1px solid #68df96;
+  color: #68df96;
+  padding: 1px 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+input[type="radio"]+label:hover,
+input[type="radio"]:checked+label {
+  background-color: #68df96 !important;
+  color: white;
+}
+.section input::placeholder {
+  font-style: italic;
+}
+button {
+  padding: 15px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  background: transparent;
+  font-size: 90%;
+  font-weight: bold;
+  border: 1px solid;
+  border-radius: 3px;
+  transition: all .2s ease-in-out;
+  color: #36cde8;
+  border-color: #36cde8;
+  outline: none;
+}
+button:hover {
+  background-color: #36cde8;
+  color: white;
+}
+.code {
+  font-family: 'Source Code Pro', monospace;
+  background-color: #263944 !important;
+  color: white;
+}
+textarea.code {
+  min-height: 75px;
+}
+#output {
+  display: none;
+}
+.apiMap summary {
+  font-weight: bold;
+}
+.apiMap .endpoints {
+  font-size: inherit;
+  /*padding: 10px 15px;*/
+}
+.apiMap .endpoints > div {
+  font-family: monospace;
+  margin-left: 10px;
+}
+.apiMap .endpoints h4 {
+  font-size: 90%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.apiMap .endpoints h4:first-child {
+  margin-top: 0;
+}
+.apiMap .endpoints .methods {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 15px;
+}
+table {
+  font-size: 90%;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+table th {
+  text-align: left;
+  background: #67df95;
+}
+table th, table td {
+  padding: 5px 10px;
+  border: 1px solid black;
+}
+#revisionsOutput {
+  display: none;
+}
+.revision {
+  margin-bottom: 5px;
+  border-radius: 3px;
+  border: 2px solid #68df96;
+}
+.revision summary {
+  padding: 3px 10px;
+  background: #68df96;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+.revision summary .action {
+  font-weight: bold;
+}
+.revision summary .timestamp {
+  float: right;
+}
+.revision .inner {
+  padding: 10px;
+}
+.revision .value {
+  color: #55cee9;
+}
+.revision button {
+  margin-right: 10px;
+}
+.revision button:last-child {
+  margin-right: 0;
+}
+.authcheck {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.authcheck.allow, .authcheck.allow button {
+  color: #68df96;
+  border-color: #68df96;
+}
+.authcheck.deny, .authcheck.deny button {
+  color: #ed5065;
+  border-color: #ed5065;
+}
+.authcheck button {
+  display: none;
+  padding: 5px 8px;
+  margin-left: 10px;
+}
