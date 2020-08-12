@@ -10,7 +10,6 @@ body {
 }
 .contentItem.component { background: rgba(255,255,255,0.4); }
 .contentItem.component.left, .contentItem.component.right {
-  display: inline-block;
   width: 45%;
   float: right;
 }
@@ -31,6 +30,10 @@ body {
 .contentItem.article .header { background: red; }
 .contentItem.block .header { background: blue; }
 .contentItem.component .header { background: green; }
+
+.contentItem .inner .title {
+  font-weight: bold;
+}
 
 .contentItem ._component {
   margin-left: 10px;
