@@ -122,7 +122,7 @@ function getRevisions() {
 function revisionDiv({ action, changes, timestamp }, course, index) {
   return `<div class="revision">` +
       `<details>` +
-        `<summary><span class="action">${action}</span> <span class="targettype">${course.displayTitle}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
+        `<summary>#${index+1} <span class="action">${action}</span> <span class="targettype">${course.displayTitle}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
         `<div class="inner">` +
           `<b>${changes.length} change${changes.length > 1 ? 's' : ''}</b>` +
             `<div class="inner">` +
