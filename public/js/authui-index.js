@@ -113,25 +113,32 @@ function getRevisions() {
     if(!revisions)  {
       $('#revisionsOutput').html('<p style="text-align:center;">No revisions for course<p>');
     } else {
-      revisions.forEach((r,i) => $('#revisionsOutput').append(revisionDiv(r, course._id, i)));
+      revisions.forEach((r,i) => $('#revisionsOutput').append(revisionDiv(r, course, i)));
       $('button[name=revert]').click(revertRevision);
       $('#revisionsOutput').show();
     }
   });
 }
-function revisionDiv({ action, diff, target, timestamp }, courseId, index) {
+function revisionDiv({ action, changes, timestamp }, course, index) {
   return `<div class="revision">` +
       `<details>` +
-        `<summary><span class="action">${action}</span> <span class="targettype">${target.type}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
+        `<summary><span class="action">${action}</span> <span class="targettype">${course.displayTitle}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
         `<div class="inner">` +
-          `<b>ID:</b> ${target._id}<br/><br/>` +
-          `<b>Changes:</b>` +
-          `<ul>${formatDiff(diff)}</ul>` +
-          `<button name="revert" data-index="${index}" data-course="${courseId}">Undo this change</button>` +
-          `<button name="revert" data-index="${index}" data-course="${courseId}" data-recursive="true">Revert to this revision</button>` +
+          `<b>${changes.length} change${changes.length > 1 ? 's' : ''}</b>` +
+            `<div class="inner">` +
+              `${changesDiv(changes)}</div>` +
+              `<button name="revert" data-index="${index}" data-course="${course._d}">Undo this revision</button>` +
+              `<button name="revert" data-index="${index}" data-course="${course._d}" data-recursive="true">Revert back to this revision</button>` +
         `</div>` +
       `</details>` +
   `</div>`;
+}
+function changesDiv(changes) {
+  let html = '';
+  changes.forEach(c => {
+    html += `<li>${c.target.type}</li>`;
+  });
+  return `<ul>${html}</ul>`;
 }
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString('en-gb');
