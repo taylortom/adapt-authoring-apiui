@@ -184,6 +184,10 @@ function refresh() {
   window.location = window.location;
 }
 function doAjax(url, options, doneCb = refresh, failCb = jqXhr => showSnack(jqXhr.responseJSON.message, false)) {
+  if(!options.contentType) {
+    options.contentType = 'application/json';
+    options.data = JSON.stringify(options.data);
+  }
   $.ajax(url, options)
     .done(doneCb)
     .fail(failCb);
