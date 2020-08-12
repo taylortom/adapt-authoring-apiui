@@ -119,7 +119,7 @@ function getRevisions() {
     }
   });
 }
-function revisionDiv({ action, changes, timestamp }, course, index) {
+function revisionDiv({ _id, action, changes, timestamp }, course, index) {
   return `<div class="revision">` +
       `<details>` +
         `<summary>#${index+1} <span class="action">${action}</span> <span class="targettype">${course.displayTitle}</span><span class="timestamp">${formatDate(timestamp)}</span></summary>` +
@@ -127,8 +127,8 @@ function revisionDiv({ action, changes, timestamp }, course, index) {
           `<b>${changes.length} change${changes.length > 1 ? 's' : ''}</b>` +
             `<div class="inner">` +
               `${changesDiv(changes)}</div>` +
-              `<button name="revert" data-index="${index}" data-course="${course._d}">Undo this revision</button>` +
-              `<button name="revert" data-index="${index}" data-course="${course._d}" data-recursive="true">Revert back to this revision</button>` +
+              `<button name="revert" data-id="${_id}" data-course="${course._id}">Undo this revision</button>` +
+              `<button name="revert" data-id="${_id}" data-course="${course._id}" data-recursive="true">Revert back to this revision</button>` +
         `</div>` +
       `</details>` +
   `</div>`;
@@ -173,10 +173,9 @@ function formatDiff(data, key) {
   }
 }
 function revertRevision(e) {
-  const revision = $(e.currentTarget).attr('data-index');
-  const _id = $(e.currentTarget).attr('data-course');
+  const revision = $(e.currentTarget).attr('data-id');
   const recursive = $(e.currentTarget).attr('data-recursive') === 'true';
-  doAjax(`/api/vcs/course/revert`, { method: 'post', data: { _id, revision, recursive } }, () => {
+  doAjax(`/api/vcs/course/revert`, { method: 'post', data: { revision, recursive } }, () => {
     showSnack(`Successfully reverted course`);
     getRevisions();
   });
