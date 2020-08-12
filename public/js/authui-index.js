@@ -175,7 +175,7 @@ function formatDiff(data, key) {
 function revertRevision(e) {
   const revision = $(e.currentTarget).attr('data-id');
   const recursive = $(e.currentTarget).attr('data-recursive') === 'true';
-  doAjax(`/api/vcs/course/revert`, { method: 'post', data: { revision, recursive } }, () => {
+  doAjax(`/api/vcs/course/revert/${revision}?recursive=${recursive}`, { method: 'post' }, () => {
     showSnack(`Successfully reverted course`);
     getRevisions();
   });
@@ -184,7 +184,7 @@ function refresh() {
   window.location = window.location;
 }
 function doAjax(url, options, doneCb = refresh, failCb = jqXhr => showSnack(jqXhr.responseJSON.message, false)) {
-  if(!options.contentType) {
+  if(options.data && !options.contentType) {
     options.contentType = 'application/json';
     options.data = JSON.stringify(options.data);
   }
