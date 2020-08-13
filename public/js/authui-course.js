@@ -12,7 +12,7 @@ function setChildrenRecursive(rootItem, items) {
   rootItem.children.forEach(c => setChildrenRecursive(c, items));
 }
 function renderRecursive(contentItem) {
-  const { _component, _id, _layout, _type, displayTitle, body } = contentItem;
+  const { _component, _id, _layout, _type, displayTitle, body, instruction } = contentItem;
   return `<div class="contentItem ${_type} ${_layout || ''}">` +
     `<div class="header">` +
       `<span class="_type">${_type}</span>` +
@@ -22,6 +22,7 @@ function renderRecursive(contentItem) {
     `<div class="inner">` +
       `<div class="title">${displayTitle}</div>` +
       (body ? `<p>${body}</p>` : '') +
+      (instruction ? `<p class="instruction">${instruction}</p>` : '') +
       contentItem.children.reduce((m,c) => `${m}${renderRecursive(c)}`, '') +
     `</div>` +
   `</div>`;

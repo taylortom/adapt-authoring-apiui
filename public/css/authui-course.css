@@ -33,6 +33,11 @@ body {
 
 .contentItem .inner .title {
   font-weight: bold;
+  font-size: 110%;
+}
+.contentItem .inner .instruction {
+  font-weight: bold;
+  font-style: italic;
 }
 
 .contentItem ._component {
