@@ -103,7 +103,7 @@ function renderCourseSelect() {
 }
 function viewCourseMap() {
   const id = $('.coursemap select[name=courses]').children("option:selected").attr('data-id');
-  window.open(`${window.location.origin}/course?_id=${id}`);
+  window.open(`${window.location.origin}/apiui/course?_id=${id}`);
 }
 function getRevisions() {
   $('#revisionsOutput').empty();
