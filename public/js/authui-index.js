@@ -58,7 +58,7 @@ function authenticate(e) {
   e.preventDefault();
   switch($(e.currentTarget).attr('name')) {
     case 'local':
-      doAjax('/api/auth/local', { method: 'post', data: $('.local form').serialize() });
+      doAjax('/api/auth/local', { method: 'post', data: $('.local form').serialize(), contentType: 'application/x-www-form-urlencoded' });
       break;
     case 'github':
       window.location = '/api/auth/github';
